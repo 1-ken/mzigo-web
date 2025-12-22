@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
@@ -79,15 +78,31 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+    <div className={cn("flex flex-col gap-6 w-full", className)} {...props}>
+      <Card className="overflow-hidden">
+        <CardContent className="p-6 md:p-8">
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
-                <p className="text-muted-foreground text-balance">
-                  Login to your account
+              <div className="flex flex-col items-center gap-2 text-center mb-6">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                    />
+                  </svg>
+                </div>
+                <h1 className="text-2xl md:text-3xl font-bold">Welcome back</h1>
+                <p className="text-muted-foreground text-sm md:text-base text-balance">
+                  Login to your account to continue
                 </p>
               </div>
               <Field>
@@ -100,16 +115,17 @@ export function LoginForm({
                   onChange={(e) => setPhone(e.target.value)}
                   required
                   disabled={isLoading}
+                  className="text-base"
                 />
               </Field>
               <Field>
-                <div className="flex items-center">
+                <div className="flex items-center justify-between">
                   <FieldLabel htmlFor="pass_phrase">Password</FieldLabel>
                   <a
                     href="/forgot-password"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
+                    className="text-xs md:text-sm text-primary underline-offset-2 hover:underline"
                   >
-                    Forgot your password?
+                    Forgot password?
                   </a>
                 </div>
                 <Input
@@ -119,31 +135,25 @@ export function LoginForm({
                   onChange={(e) => setPassPhrase(e.target.value)}
                   required
                   disabled={isLoading}
+                  className="text-base"
                 />
               </Field>
               <Field>
                 <Button 
                   type="submit" 
                   disabled={isLoading}
+                  className="w-full text-base py-5"
                 >
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </Field>
             </FieldGroup>
           </form>
-          <div className="bg-muted relative hidden md:block">
-            <img
-              src="/placeholder.svg"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
-          </div>
         </CardContent>
       </Card>
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </FieldDescription>
+      <p className="text-center text-xs text-muted-foreground px-6">
+        By continuing, you agree to our Terms of Service and Privacy Policy.
+      </p>
     </div>
   );
 }

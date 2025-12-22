@@ -1,22 +1,15 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
+import { MobileNav } from "@/components/mobile-nav";
 import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -27,9 +20,10 @@ export default function MainLayout({
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (status === "loading") return; // Still loading
+    if (status === "loading") return;
 
     if (!session) {
       router.push("/login");
@@ -40,9 +34,9 @@ export default function MainLayout({
   // Show loading while checking authentication
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <Spinner className="size-8 mx-auto" />
+          <Spinner className="mx-auto size-8" />
           <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -54,37 +48,40 @@ export default function MainLayout({
     return null;
   }
 
+  const getPageTitle = () => {
+    if (pathname === "/dashboard") return "Dashboard";
+    return "User Portal";
+  };
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-        <Separator className="my-2" />
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <>
+      {/* Mobile Navigation - Only visible on mobile */}
+      <div className="lg:hidden">
+        <MobileNav />
+        <main className="flex flex-1 flex-col">
           {children}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        </main>
+      </div>
+
+      {/* Desktop Sidebar - Only visible on desktop */}
+      <div className="hidden lg:block">
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+              <div className="flex items-center gap-2 px-4">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+                <h2 className="text-lg font-semibold">{getPageTitle()}</h2>
+              </div>
+            </header>
+            <div className="flex flex-1 flex-col">
+              {children}
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
+    </>
   );
 }
+
