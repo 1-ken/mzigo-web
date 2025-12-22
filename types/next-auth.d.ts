@@ -9,6 +9,7 @@ declare module "next-auth" {
       email?: string | null;
       phone?: string;
       image?: string | null;
+      rights?: string[];
     };
     accessToken?: string;
     refreshToken?: string;
@@ -30,6 +31,8 @@ declare module "next-auth" {
     name?: string | null;
     email?: string | null;
     phone?: string;
+    image?: string | null;
+    rights?: string[];
     accessToken?: string;
     refreshToken?: string;
     role?: {
