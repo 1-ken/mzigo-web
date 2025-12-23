@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
     REFRESH: "/auth/refresh.php", // Add when refresh endpoint is available
     LOGOUT: "/auth/logout.php", // Add when logout endpoint is available
   },
+  CREATE_MZIGO:'/mzigo/manage.php',
 } as const;
 
 /**
