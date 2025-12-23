@@ -1,29 +1,21 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { ActionCards } from "@/components/action-cards";
+import { DashboardContent } from "@/components/dashboard/dashboard-content";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
 
   if (!session) return null;
 
-
   return (
-    <div className="min-h-screen w-full p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-8">
-        {/* Header */}
-        {/* <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Welcome Back, {user.name}!
-          </h1>
-          <p className="text-muted-foreground text-sm md:text-base">
-            Access your available actions below
-          </p>
-        </div> */}
+    <div className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:p-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold md:text-3xl">Dashboard</h1>
+      </div>
 
-        {/* Action Cards */}
-        <ActionCards />
+      <div className="grid gap-4 md:gap-6">
+        <DashboardContent />
       </div>
     </div>
   );
