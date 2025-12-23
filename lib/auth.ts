@@ -3,23 +3,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getApiUrl, API_ENDPOINTS } from "@/lib/constants";
 
 interface LoginResponse {
+  status: string;
   message: string;
   access_token: string;
   refresh_token: string;
   user: {
     id: string;
     name: string;
-    phone: string;
-    role: {
-      id: string;
-      name: string;
-      rank: string;
-    };
-    branch: {
-      id: string;
-      name: string;
-      county_code: string;
-    };
+    user_level: string;
+    roles: string[];
   };
 }
 
@@ -91,16 +83,16 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        phone: { label: "Phone", type: "text" },
+        id_number: { label: "ID Number", type: "text" },
         pass_phrase: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.phone || !credentials?.pass_phrase) {
-          throw new Error("Phone and password are required");
+        if (!credentials?.id_number || !credentials?.pass_phrase) {
+          throw new Error("ID number and password are required");
         }
 
         try {
-          const loginUrl = getApiUrl(API_ENDPOINTS.AUTH.LOGIN);
+          const loginUrl = "https://iguru.co.ke/PLAYGROUND/mzigo3.0/api/auth/login.php";
           
           const response = await fetch(loginUrl, {
             method: "POST",
@@ -108,7 +100,7 @@ export const authOptions: NextAuthOptions = {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              phone: credentials.phone,
+              id_number: credentials.id_number,
               pass_phrase: credentials.pass_phrase,
             }),
           });
@@ -125,14 +117,14 @@ export const authOptions: NextAuthOptions = {
             return {
               id: data.user.id,
               name: data.user.name,
-              email: data.user.phone, // Using phone as email for NextAuth compatibility
-              phone: data.user.phone,
+              email: data.user.name + "@mzigo.local",
+              phone: credentials.id_number,
               accessToken: data.access_token,
               refreshToken: data.refresh_token,
               accessTokenExpiresAt: now + ACCESS_TOKEN_EXPIRY,
               refreshTokenExpiresAt: now + REFRESH_TOKEN_EXPIRY,
-              role: data.user.role,
-              branch: data.user.branch,
+              userLevel: data.user.user_level,
+              rights: data.user.roles,
             };
           }
 
@@ -154,8 +146,8 @@ export const authOptions: NextAuthOptions = {
         token.accessTokenExpiresAt = (user as any).accessTokenExpiresAt;
         token.refreshTokenExpiresAt = (user as any).refreshTokenExpiresAt;
         token.phone = (user as any).phone;
-        token.role = (user as any).role;
-        token.branch = (user as any).branch;
+        token.userLevel = (user as any).userLevel;
+        token.rights = (user as any).rights;
         return token;
       }
 
@@ -196,10 +188,10 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.sub || "";
         session.user.phone = token.phone as string;
+        session.user.rights = token.rights as string[];
         (session as any).accessToken = token.accessToken;
         (session as any).refreshToken = token.refreshToken;
-        (session as any).role = token.role;
-        (session as any).branch = token.branch;
+        (session as any).userLevel = token.userLevel;
         (session as any).accessTokenExpiresAt = token.accessTokenExpiresAt;
       }
       return session;

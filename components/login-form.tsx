@@ -18,7 +18,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [phone, setPhone] = useState("");
+  const [idNumber, setIdNumber] = useState("");
   const [passPhrase, setPassPhrase] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -39,7 +39,7 @@ export function LoginForm({
 
     try {
       const result = await signIn("credentials", {
-        phone,
+        id_number: idNumber,
         pass_phrase: passPhrase,
         redirect: false,
         callbackUrl: callbackUrl,
@@ -106,13 +106,13 @@ export function LoginForm({
                 </p>
               </div>
               <Field>
-                <FieldLabel htmlFor="phone">Phone Number</FieldLabel>
+                <FieldLabel htmlFor="id_number">ID Number</FieldLabel>
                 <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="0712345678"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  id="id_number"
+                  type="text"
+                  placeholder="1234"
+                  value={idNumber}
+                  onChange={(e) => setIdNumber(e.target.value)}
                   required
                   disabled={isLoading}
                   className="text-base"
