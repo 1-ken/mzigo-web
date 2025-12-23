@@ -11,8 +11,13 @@ interface LoginResponse {
     id: string;
     name: string;
     user_level: string;
-    company_id: string;
-    company_name: string | null;
+    company: {
+      id: string;
+      name: string;
+      fields_to_hide?: string;
+      receipt_format?: number;
+      model_type?: string;
+    };
     roles: Array<{
       name: string;
       app_title: string;
@@ -130,6 +135,7 @@ export const authOptions: NextAuthOptions = {
               accessTokenExpiresAt: now + ACCESS_TOKEN_EXPIRY,
               refreshTokenExpiresAt: now + REFRESH_TOKEN_EXPIRY,
               userLevel: data.user.user_level,
+              company: data.user.company,
               rights: data.user.roles.map((role) => role.name),
               rolesObject: data.user.roles,
             };
@@ -154,6 +160,7 @@ export const authOptions: NextAuthOptions = {
         token.refreshTokenExpiresAt = (user as any).refreshTokenExpiresAt;
         token.phone = (user as any).phone;
         token.userLevel = (user as any).userLevel;
+        token.company = (user as any).company;
         token.rights = (user as any).rights;
         token.rolesObject = (user as any).rolesObject;
         return token;
@@ -198,6 +205,7 @@ export const authOptions: NextAuthOptions = {
         session.user.phone = token.phone as string;
         session.user.rights = token.rights as string[];
         (session as any).rolesObject = token.rolesObject;
+        (session as any).company = token.company;
         (session as any).accessToken = token.accessToken;
         (session as any).refreshToken = token.refreshToken;
         (session as any).userLevel = token.userLevel;

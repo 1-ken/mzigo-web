@@ -16,6 +16,13 @@ declare module "next-auth" {
       app_title: string;
       icon_name: string;
     }>;
+    company?: {
+      id: string;
+      name: string;
+      fields_to_hide?: string;
+      receipt_format?: number;
+      model_type?: string;
+    };
     accessToken?: string;
     refreshToken?: string;
     accessTokenExpiresAt?: number;
@@ -43,6 +50,13 @@ declare module "next-auth" {
       app_title: string;
       icon_name: string;
     }>;
+    company?: {
+      id: string;
+      name: string;
+      fields_to_hide?: string;
+      receipt_format?: number;
+      model_type?: string;
+    };
     accessToken?: string;
     refreshToken?: string;
     role?: {
@@ -71,6 +85,13 @@ declare module "next-auth/jwt" {
       app_title: string;
       icon_name: string;
     }>;
+    company?: {
+      id: string;
+      name: string;
+      fields_to_hide?: string;
+      receipt_format?: number;
+      model_type?: string;
+    };
     role?: {
       id: string;
       name: string;
