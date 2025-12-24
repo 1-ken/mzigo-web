@@ -8,12 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { VehicleInput } from "@/components/ui/vehicle-input";
 import { useCreateMzigo } from "@/hooks/use-create-mzigo";
+import { useVehicles } from "@/hooks/use-vehicles";
 
 export function CreateShipmentForm() {
   const router = useRouter();
   const { data: session } = useSession();
   const { createMzigo } = useCreateMzigo();
+  const { vehicles, isLoading: vehiclesLoading, error: vehiclesError } = useVehicles();
 
   const [formData, setFormData] = useState({
     senderName: "",
@@ -269,13 +272,16 @@ export function CreateShipmentForm() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="vehiclePlate">Vehicle Plate Number</Label>
-            <Input
+            <VehicleInput
               id="vehiclePlate"
-              name="vehiclePlate"
-              placeholder="e.g., KAA 123B"
               value={formData.vehiclePlate}
-              onChange={handleChange}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, vehiclePlate: value }))
+              }
+              vehicles={vehicles}
+              isLoading={vehiclesLoading}
+              error={vehiclesError}
+              placeholder="Search by plate number or fleet number"
               required
             />
           </div>
