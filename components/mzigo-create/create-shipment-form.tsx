@@ -17,6 +17,8 @@ import { useVehicles } from "@/hooks/use-vehicles";
 import { useDestinations } from "@/hooks/use-destinations";
 import { useSizes } from "@/hooks/use-sizes";
 import { useRoutes } from "@/hooks/use-routes";
+import { ReceiptPreview } from "@/components/receipt/receipt-preview";
+import { ReceiptData } from "@/types/receipt";
 
 export function CreateMzigoForm() {
   const router = useRouter();
@@ -46,6 +48,8 @@ export function CreateMzigoForm() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -99,10 +103,11 @@ export function CreateMzigoForm() {
 
         console.log("Mzigo created successfully:", response.data);
         
-        // Redirect to dashboard after a short delay
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 1500);
+        // Open receipt preview
+        if (response.data) {
+          setReceiptData(response.data as ReceiptData);
+          setReceiptOpen(true);
+        }
       } else {
         setError(response.message || "Failed to create mzigo");
       }
@@ -358,6 +363,16 @@ export function CreateMzigoForm() {
       >
         {isLoading ? "Creating Mzigo..." : "Create Mzigo"}
       </Button>
+
+      {/* Receipt Preview */}
+      <ReceiptPreview
+        open={receiptOpen}
+        data={receiptData}
+        onClose={() => {
+          setReceiptOpen(false);
+          router.push("/dashboard");
+        }}
+      />
     </form>
   );
 }
