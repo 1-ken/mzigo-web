@@ -85,7 +85,7 @@ export function CreateMzigoForm() {
         amount_charged: formData.amountCharged,
         payment_mode: formData.paymentMode,
         p_vehicle: formData.vehiclePlate,
-        commission: formData.commission,
+        commission: formData.commission || "0", // Default to "0" if empty
         special_instructions: formData.specialInstructions,
       };
 
