@@ -1,9 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDownIcon, PrinterIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { ReceiptData } from "@/types/receipt";
 import { openPrintWindow } from "@/lib/receipt";
+import { toast } from "sonner";
 
 interface ReceiptPreviewProps {
   open: boolean;
@@ -12,6 +21,33 @@ interface ReceiptPreviewProps {
 }
 
 export function ReceiptPreview({ open, onClose, data }: ReceiptPreviewProps) {
+  const [isSending, setIsSending] = useState(false);
+
+  const handlePrint = () => {
+    if (data) {
+      openPrintWindow(data);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!data) return;
+    
+    setIsSending(true);
+    try {
+      // TODO: Implement send functionality (e.g., send via SMS, WhatsApp, or email)
+      toast.success("Receipt sent successfully!", {
+        description: `Receipt #${data.receipt_number} has been sent.`,
+      });
+      onClose();
+    } catch (error) {
+      toast.error("Failed to send receipt", {
+        description: error instanceof Error ? error.message : "An error occurred",
+      });
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={(v) => (!v ? onClose() : undefined)}>
       <DialogContent className="sm:max-w-md">
@@ -37,7 +73,24 @@ export function ReceiptPreview({ open, onClose, data }: ReceiptPreviewProps) {
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Close</Button>
-          <Button onClick={() => data && openPrintWindow(data)}>Print</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button disabled={!data || isSending}>
+                {isSending ? "Sending..." : "Actions"}
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handlePrint}>
+                <PrinterIcon className="mr-2 h-4 w-4" />
+                Print
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSend}>
+                <PaperAirplaneIcon className="mr-2 h-4 w-4" />
+                Send
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </DialogFooter>
       </DialogContent>
     </Dialog>

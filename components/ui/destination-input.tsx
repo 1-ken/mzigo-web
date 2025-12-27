@@ -101,11 +101,11 @@ export function DestinationInput({
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{destination.name}</span>
                   <span className="text-xs text-gray-500">
-                    Route #{destination.route}
+                    {/* Route #{destination.route} */}
                   </span>
                 </div>
                 <div className="text-xs text-gray-400 mt-0.5">
-                  📞 {destination.phone_number}
+                  {/* 📞 {destination.phone_number} */}
                 </div>
               </button>
             ))}

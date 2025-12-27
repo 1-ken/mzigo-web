@@ -103,12 +103,12 @@ export function VehicleInput({
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{vehicle.number_plate}</span>
                   <span className="text-xs text-gray-500">
-                    Fleet #{vehicle.fleet_number}
+                    {/* Fleet #{vehicle.fleet_number} */}
                   </span>
                 </div>
                 <div className="text-xs text-gray-400 mt-0.5">
-                  {vehicle.active_status === "1" ? "✓ Active" : "Inactive"} •{" "}
-                  {vehicle.load_count} loads
+                  {/* {vehicle.active_status === "1" ? "✓ Active" : "Inactive"} •{" "} */}
+                  {/* {vehicle.load_count} loads */}
                 </div>
               </button>
             ))}
